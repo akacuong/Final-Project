@@ -30,6 +30,13 @@ public class SecurityConfig {
                         .requestMatchers("/customers/**").permitAll() // ✅ Cho phép khách hàng CRUD
                         .requestMatchers("/agents/**").permitAll()
                         .requestMatchers("/styles/**").permitAll()
+                        .requestMatchers("/packages/**").permitAll()
+                        .requestMatchers("/shops/**").permitAll()
+                        .requestMatchers("/hairstylists/**").permitAll()
+                        .requestMatchers("/bookings/**").permitAll()
+                        .requestMatchers("/services/**").permitAll()
+                        .requestMatchers("/bookingdetails/**").permitAll()
+                        .requestMatchers("/products/**").permitAll()
                         .anyRequest().authenticated() // Còn lại phải có xác thực
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
