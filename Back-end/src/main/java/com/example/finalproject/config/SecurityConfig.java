@@ -37,6 +37,9 @@ public class SecurityConfig {
                         .requestMatchers("/services/**").permitAll()
                         .requestMatchers("/bookingdetails/**").permitAll()
                         .requestMatchers("/products/**").permitAll()
+                        .requestMatchers("/categories/**").permitAll()
+                        .requestMatchers("/reviews/**").permitAll()
+                        .requestMatchers("/booking-details/**").permitAll()
                         .anyRequest().authenticated() // Còn lại phải có xác thực
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -3,30 +3,25 @@ package com.example.finalproject.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class Style {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "agent_id", nullable = false)
-    private Agent agent;
+    public Category() {}
 
-    public Style() {}
-
-    public Style(String name, Agent agent) {
+    public Category(String name) {
         this.name = name;
-        this.agent = agent;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -36,13 +31,5 @@ public class Style {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Agent getAgent() {
-        return agent;
-    }
-
-    public void setAgent(Agent agent) {
-        this.agent = agent;
     }
 }
