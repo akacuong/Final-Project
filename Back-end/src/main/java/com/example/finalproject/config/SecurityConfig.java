@@ -27,8 +27,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // ✅ Tắt CSRF để API hoạt động đúng
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll() // ✅ Cho phép đăng nhập, đăng ký
-                        .requestMatchers("/customers/**").permitAll() // ✅ Cho phép khách hàng CRUD
-                        .requestMatchers("/agents/**").permitAll()
+                        .requestMatchers("/customers/**").hasAnyRole("ADMIN","CUSTOMER") // ✅ Cho phép khách hàng CRUD
+                        .requestMatchers("/agents/**").hasAnyRole("ADMIN","AGENT")
                         .requestMatchers("/styles/**").permitAll()
                         .requestMatchers("/packages/**").permitAll()
                         .requestMatchers("/shops/**").permitAll()
@@ -39,7 +39,11 @@ public class SecurityConfig {
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/categories/**").permitAll()
                         .requestMatchers("/reviews/**").permitAll()
+                        .requestMatchers("/orders/**").permitAll()
+                        .requestMatchers("/payments/**").permitAll()
+                        .requestMatchers("/order-details/**").permitAll()
                         .requestMatchers("/booking-details/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()  // cho phép truy cập ảnh
                         .anyRequest().authenticated() // Còn lại phải có xác thực
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

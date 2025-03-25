@@ -29,7 +29,6 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
     private Account account;  // ✅ Many-to-One Relationship
-
     // Constructors
     public Customer() {}
 
@@ -41,7 +40,6 @@ public class Customer {
         this.imageFile = imageFile;
         this.account = account;
     }
-
     // Getters and Setters
     public Integer getId() {
         return id;
