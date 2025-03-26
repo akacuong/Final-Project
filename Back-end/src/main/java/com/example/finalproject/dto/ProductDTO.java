@@ -6,7 +6,7 @@ public class ProductDTO {
     private Integer id;
     private String image;
     private String name;
-    private BigDecimal price;  // ✅ Chuyển từ Integer → BigDecimal
+    private BigDecimal price;
     private Integer categoryId;
 
     public ProductDTO(Integer id, String image, String name, BigDecimal price, Integer categoryId) {
@@ -15,6 +15,8 @@ public class ProductDTO {
         this.name = name;
         this.price = price;
         this.categoryId = categoryId;
+    }
+    public ProductDTO() {
     }
 
     public Integer getId() { return id; }

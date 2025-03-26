@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // ✅ Tắt CSRF để API hoạt động đúng
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll() // ✅ Cho phép đăng nhập, đăng ký
-                        .requestMatchers("/customers/**").hasAnyRole("ADMIN","CUSTOMER") // ✅ Cho phép khách hàng CRUD
+                        .requestMatchers("/customers/**").permitAll()/*hasAnyRole("ADMIN","CUSTOMER" *///  ✅ Cho phép khách hàng CRUD
                         .requestMatchers("/agents/**").hasAnyRole("ADMIN","AGENT")
                         .requestMatchers("/styles/**").permitAll()
                         .requestMatchers("/packages/**").permitAll()

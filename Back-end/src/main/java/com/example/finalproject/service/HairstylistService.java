@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,11 +17,16 @@ public class HairstylistService {
 
     private final HairstylistRepository hairstylistRepository;
     private final ShopRepository shopRepository;
-    private static final String UPLOAD_DIR = "uploads/";
+    private final ImgurService imgurService; // ✅ Thêm ImgurService
 
-    public HairstylistService(HairstylistRepository hairstylistRepository, ShopRepository shopRepository) {
+    public HairstylistService(
+            HairstylistRepository hairstylistRepository,
+            ShopRepository shopRepository,
+            ImgurService imgurService
+    ) {
         this.hairstylistRepository = hairstylistRepository;
         this.shopRepository = shopRepository;
+        this.imgurService = imgurService;
     }
 
     // ✅ Lấy danh sách hairstylists
@@ -45,16 +48,14 @@ public class HairstylistService {
         Shop shop = shopRepository.findById(hairstylistDTO.getShopId())
                 .orElseThrow(() -> new RuntimeException("❌ Shop không tồn tại!"));
 
-        // ✅ Lưu ảnh nếu có
-        String imageFileName = (file != null && !file.isEmpty()) ? saveImage(file) : null;
+        String imageUrl = (file != null && !file.isEmpty()) ? imgurService.uploadToImgur(file) : null;
 
-        // ✅ Tạo hairstylist mới
         Hairstylist hairstylist = new Hairstylist();
         hairstylist.setShop(shop);
         hairstylist.setName(hairstylistDTO.getName());
         hairstylist.setExperience(hairstylistDTO.getExperience());
         hairstylist.setSpecialty(hairstylistDTO.getSpecialty());
-        hairstylist.setImage(imageFileName);
+        hairstylist.setImage(imageUrl);
 
         return convertToDTO(hairstylistRepository.save(hairstylist));
     }
@@ -64,7 +65,6 @@ public class HairstylistService {
         Hairstylist hairstylist = hairstylistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("❌ Hairstylist không tồn tại!"));
 
-        // ✅ Cập nhật thông tin nếu không null
         if (hairstylistDTO.getShopId() != null) {
             Shop shop = shopRepository.findById(hairstylistDTO.getShopId())
                     .orElseThrow(() -> new RuntimeException("❌ Shop không tồn tại!"));
@@ -75,57 +75,24 @@ public class HairstylistService {
         if (hairstylistDTO.getExperience() != null) hairstylist.setExperience(hairstylistDTO.getExperience());
         if (hairstylistDTO.getSpecialty() != null) hairstylist.setSpecialty(hairstylistDTO.getSpecialty());
 
-        // ✅ Kiểm tra nếu có file ảnh mới
         if (file != null && !file.isEmpty()) {
-            deleteImage(hairstylist.getImage()); // Xóa ảnh cũ
-            hairstylist.setImage(saveImage(file)); // Lưu ảnh mới
+            // ❌ Không cần xoá ảnh cũ (Imgur anonymous không có quyền xoá)
+            hairstylist.setImage(imgurService.uploadToImgur(file));
         }
 
         return convertToDTO(hairstylistRepository.save(hairstylist));
     }
 
-    // ✅ Xóa hairstylist
+    // ✅ Xoá hairstylist
     public void deleteHairstylist(Integer id) {
         Hairstylist hairstylist = hairstylistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("❌ Hairstylist không tồn tại!"));
 
-        deleteImage(hairstylist.getImage()); // Xóa ảnh trước khi xóa hairstylist
+        // ❌ Không cần xoá ảnh (ảnh ẩn danh trên Imgur không thể quản lý)
         hairstylistRepository.deleteById(id);
     }
 
-    // ✅ Lưu ảnh vào thư mục (Chỉ tạo thư mục nếu chưa có)
-    private String saveImage(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) return null;
-
-        // ✅ Kiểm tra xem thư mục đã tồn tại chưa, nếu chưa thì tạo
-        Path uploadPath = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        // ✅ Tạo tên file duy nhất
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path filePath = uploadPath.resolve(fileName);
-
-        // ✅ Lưu file vào thư mục
-        Files.write(filePath, file.getBytes());
-
-        return fileName;
-    }
-
-    // ✅ Xóa ảnh cũ
-    private void deleteImage(String fileName) {
-        if (fileName != null) {
-            try {
-                Path filePath = Paths.get(UPLOAD_DIR, fileName);
-                Files.deleteIfExists(filePath);
-            } catch (IOException e) {
-                System.err.println("❌ Lỗi khi xóa ảnh: " + e.getMessage());
-            }
-        }
-    }
-
-    // ✅ Chuyển đổi Entity → DTO
+    // ✅ Convert Entity → DTO
     private HairstylistDTO convertToDTO(Hairstylist hairstylist) {
         return new HairstylistDTO(
                 hairstylist.getId(),
@@ -133,7 +100,7 @@ public class HairstylistService {
                 hairstylist.getName(),
                 hairstylist.getExperience(),
                 hairstylist.getSpecialty(),
-                hairstylist.getImage()
+                hairstylist.getImage() // là URL Imgur
         );
     }
 }
