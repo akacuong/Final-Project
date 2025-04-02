@@ -1,0 +1,68 @@
+<div class="container-fluid mt-4">
+
+    <!-- Form Add/Update -->
+    <div class="card p-4 shadow-lg">
+        <h4 class="mb-3 text-center">{{ selectedAgent ? 'Update Agent' : 'Agent Management' }}</h4>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Tên đại lý" [(ngModel)]="newAgent.agentName">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Chuyên môn" [(ngModel)]="newAgent.specialization">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Địa điểm" [(ngModel)]="newAgent.location">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Năm thành lập" [(ngModel)]="newAgent.establishment">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Giờ mở cửa" [(ngModel)]="newAgent.openingHours">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" placeholder="Kỹ năng chuyên môn" [(ngModel)]="newAgent.professionalSkills">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <input type="text" class="form-control" placeholder="Chủ sở hữu" [(ngModel)]="newAgent.ownerName">
+            </div>
+            <div class="col-md-6 mb-3">
+                <input type="email" class="form-control" placeholder="Email" [(ngModel)]="newAgent.email">
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-success px-4" (click)="saveAgent()">
+                {{ selectedAgent ? 'Update' : 'Add' }}
+            </button>
+            <button class="btn btn-secondary ml-2 px-4" (click)="resetForm()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Agent Cards -->
+    <div class="mt-4 ">
+        <h4 class="mb-3 text-center">Agent Information</h4>
+        <div class="row">
+            <div class="col-md-4 mb-3 " *ngFor="let agent of agents">
+                <div class="card h-100 shadow-lg text-center">
+                    <img src="assets/default-agent.jpg" alt="Agent Image" class="card-img-top" style="width:100%; height:200px; object-fit:cover;">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ agent.agentName }}</h5>
+                        <p class="title"><strong>Specialization:</strong> {{ agent.specialization }}</p>
+                        <p><strong>location:</strong> {{ agent.location }}</p>         
+                        <p><strong>Owner Name:</strong> {{ agent.ownerName }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-info btn-sm" (click)="editAgent(agent)">
+                            <i class="fa fa-edit"></i> Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

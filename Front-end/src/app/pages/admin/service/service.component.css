@@ -1,0 +1,104 @@
+.container {
+  max-width: 900px;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2, h4 {
+  font-weight: bold;
+  color: #333;
+}
+
+.form-control {
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  border-radius: 5px;
+  padding: 8px 15px;
+  font-size: 14px;
+}
+
+.text-right button {
+  margin-right: 5px;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+.table th {
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+}
+
+.table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+img {
+  border-radius: 5px;
+  object-fit: cover;
+}
+ body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            border-bottom: 1px solid #ccc;
+        }
+        .header input {
+            width: 200px;
+        }
+        .header nav a {
+            margin-right: 20px;
+        }
+        .header .fa-shopping-cart {
+            margin-left: 20px;
+        }
+        .main-content {
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+        .main-content {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          border: 1px solid #ccc;
+          padding: 20px;
+          width: 100%;
+          min-height: 100vh; 
+      }
+        .services {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+      }
+      
+      .service-item {
+          flex-grow: 1;
+          flex-basis: calc(25% - 20px); 
+          border: 1px solid #ccc;
+          padding: 10px;
+          text-align: center;
+          margin: 10px;
+      }
+      
+      .service-item img {
+          width: 100%;
+          height: auto;
+          background-color: #f0f0f0;
+      }
+        .service-item button {
+            margin-top: 10px;
+        }
+        .container {
+          max-width: 100%;
+          flex-grow: 1;
+      }

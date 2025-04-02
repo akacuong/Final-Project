@@ -1,0 +1,39 @@
+<div class="container-fluid main-container mt-4">
+    <h2 class="text-center">List of Facilities </h2>
+
+    <div *ngFor="let agent of agents" class="facility-section">
+        <h3 class="text-primary">{{ agent.agentName }}</h3>
+
+        <!-- Form Add Facilities -->
+        <div class="add-facility">
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" class="form-control" [(ngModel)]="newShop.locationShop">
+            </div>
+
+            <div class="form-group mt-2">
+                <label>Phone Number</label>
+                <input type="text" class="form-control" [(ngModel)]="newShop.phoneNumber">
+            </div>
+
+            <button class="btn btn-success mb-3 " (click)="saveShop(agent)">Confirm</button>
+        </div>
+
+        <!-- List of Facilities -->
+        <div class="facility-list">
+            <div class="row mt-2">
+                <div class="col-md-4 mb-3" *ngFor="let shop of shopsByAgent[agent.id]">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Facilities {{ shop.shopId }}</h5>
+                            <p><strong>Location:</strong> {{ shop.locationShop }}</p>
+                            <p><strong>Phone Number:</strong> {{ shop.phoneNumber }}</p>
+
+                            <button class="btn btn-danger btn-sm" (click)="deleteShop(shop.shopId)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>

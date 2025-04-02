@@ -1,0 +1,409 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Sticky Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+  }
+  
+  .loyalty-section {
+    font-size: 16px;
+    color: #f39c12;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .loyalty-section i {
+    color: #f39c12;
+  }
+  
+  .navbar .nav-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .logo img {
+    height: 100%;
+    max-height: 60px;
+    transition: transform 0.3s ease;
+  }
+  
+  .logo img:hover {
+    transform: scale(1.05);
+  }
+  
+  .navbar .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+  }
+  
+  .navbar .nav-links a {
+    font-size: 18px;
+    color: #6d5632;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    padding: 8px 12px;
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  .navbar .nav-links a:hover {
+    color: white;
+    background-color: #a0895b;
+  }
+  
+  .navbar .nav-links a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #a0895b;
+    transition: width 0.3s ease;
+  }
+  
+  .navbar .nav-links a:hover::after {
+    width: 100%;
+  }
+  
+  .navbar .cart-icon {
+    font-size: 24px;
+    color: #6d5632;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  
+  .navbar .cart-icon:hover {
+    transform: scale(1.2);
+    color: #a0895b;
+  }
+  
+  /* Main Content - Adjusted for fixed navbar */
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    flex: 1;
+    padding-bottom: 50px;
+    margin-top: 100px; /* Add space for fixed navbar */
+  }
+  
+  .main-content .image-section {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: none;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .main-content .image-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .main-content .image-section:hover img {
+    transform: scale(1.03);
+  }
+  
+  /* Content Sections */
+  .content-sections {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+    gap: 30px;
+  }
+  
+  /* Schedule Now Section */
+  .schedule-now {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    color: #a0895b;
+    border-radius: 12px;
+    padding: 30px;
+    margin-right: 20px;
+    flex: 1;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .schedule-now:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+  
+  .schedule-now h2 {
+    margin-bottom: 25px;
+    font-size: 28px;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .schedule-now h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: #a0895b;
+  }
+  
+  .schedule-now form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .schedule-now form input {
+    margin-bottom: 15px;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .schedule-now form input:focus {
+    outline: none;
+    border-color: #a0895b;
+    box-shadow: 0 0 0 2px rgba(160, 137, 91, 0.2);
+  }
+  
+  .search-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .dropdown-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .schedule-now form button {
+    padding: 14px;
+    background-color: #a0895b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+  }
+  
+  .schedule-now form button:hover {
+    background-color: #8a7349;
+    transform: translateY(-2px);
+  }
+  
+  .schedule-now form button:active {
+    transform: translateY(0);
+  }
+  
+  .warning-text {
+    color: #e74c3c;
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  /* Top Barber Section */
+  .top-barber {
+    text-align: center;
+    flex: 2;
+    color: #a0895b;
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .top-barber:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+  
+  .top-barber h2 {
+    margin-bottom: 25px;
+    font-size: 28px;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  
+  .top-barber h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background-color: #a0895b;
+  }
+  
+  .top-barber .barber-list {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .top-barber .barber-list .barber {
+    width: 120px;
+    height: 180px;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .top-barber .barber-list .barber:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .top-barber .barber-list .barber img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .top-barber .barber-list .barber:hover img {
+    transform: scale(1.1);
+  }
+  
+  /* Footer */
+  .footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 40px 0;
+    font-size: 14px;
+    border-top: 1px solid #ccc;
+    margin-top: 20px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 992px) {
+    .content-sections {
+      flex-direction: column;
+    }
+  
+    .schedule-now {
+      margin-right: 0;
+      margin-bottom: 30px;
+    }
+  
+    .top-barber .barber-list {
+      gap: 15px;
+    }
+  
+    .top-barber .barber-list .barber {
+      width: 100px;
+      height: 150px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 10px 15px;
+    }
+  
+    .navbar .nav-links {
+      gap: 15px;
+    }
+  
+    .navbar .nav-links a {
+      font-size: 16px;
+    }
+  
+    .main-content .image-section {
+      height: 35vh;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .navbar .nav-links {
+      gap: 10px;
+    }
+  
+    .navbar .nav-links a {
+      font-size: 14px;
+      padding: 5px 8px;
+    }
+  
+    .loyalty-section {
+      font-size: 14px;
+    }
+  
+    .top-barber .barber-list {
+      flex-wrap: wrap;
+    }
+  
+    .top-barber .barber-list .barber {
+      width: 80px;
+      height: 120px;
+    }
+  }
+  
+  

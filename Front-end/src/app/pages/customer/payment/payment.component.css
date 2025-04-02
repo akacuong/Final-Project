@@ -1,0 +1,150 @@
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: url('https://easysalon.vn/wp-content/uploads/2019/10/so-sanh-barber-shop-va-tiem-cat-toc.png') no-repeat center center/cover;
+}
+
+/* Tạo màu nền phù hợp với nâu và vàng */
+.container {
+    width: 90vw;
+    height: 90vh;
+    max-width: 1200px;
+    background: linear-gradient(to bottom right, #A67C52, #E6C17C); /* Gradient nâu vàng */
+    border-radius: 15px;
+    padding: 25px;
+    position: relative;
+    overflow: auto;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3); /* Hiệu ứng đổ bóng */
+}
+
+/* Căn chỉnh bố cục đẹp hơn */
+.checkout-form {
+    display: flex;
+    gap: 20px;
+    border-radius: 10px;
+}
+
+.delivery-section, .product-section {
+    flex: 1;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9); /* Làm nổi bật nội dung */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+.row input {
+    flex: 1;
+}
+
+.delivery-option {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.radio-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.product-item {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #ccc;
+    margin-right: 15px;
+}
+
+.total {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.payment-button {
+    display: block;
+    margin-left: auto;
+    padding: 12px 20px;
+    background-color: #6D5632; 
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    transition: background 0.3s, transform 0.2s;
+}
+.payment-button:hover {
+    background-color: #5A4528;
+    transform: scale(1.05);
+}
+.back-to-home{
+    display: block;
+    margin-left: auto;
+    margin-top: 30px;
+    padding: 12px 20px;
+    background-color: #6D5632; 
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    transition: background 0.3s, transform 0.2s;
+}
+.radio-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.radio-container label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4D331F;
+}

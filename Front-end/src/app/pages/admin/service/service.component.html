@@ -1,0 +1,74 @@
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Manager Service</h2>
+    <div class="card p-3 mb-4">
+      <h4 class="mb-3">{{ selectedService ? 'Update Service' : 'Add Service' }}</h4>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <input type="text" class="form-control" placeholder="Service Name"
+            *ngIf="selectedService; else newServiceField"
+            [(ngModel)]="selectedService.name">
+          <ng-template #newServiceField>
+            <input type="text" class="form-control" placeholder="Service Name" [(ngModel)]="newService.name">
+          </ng-template>
+        </div>
+  
+        <div class="col-md-4 mb-3">
+          <input type="number" class="form-control" placeholder="Price"
+            *ngIf="selectedService; else newPriceField"
+            [(ngModel)]="selectedService.price">
+          <ng-template #newPriceField>
+            <input type="number" class="form-control" placeholder="Price" [(ngModel)]="newService.price">
+          </ng-template>
+        </div>
+  
+        <div class="col-md-4 mb-3">
+          <input type="text" class="form-control" placeholder="Image URL"
+            *ngIf="selectedService; else newImageField"
+            [(ngModel)]="selectedService.image">
+          <ng-template #newImageField>
+            <input type="text" class="form-control" placeholder="Image URL" [(ngModel)]="newService.image">
+          </ng-template>
+        </div>
+      </div>
+  
+      <div class="text-right">
+        <button class="btn btn-success" (click)="selectedService ? updateService() : addService()">
+          {{ selectedService ? 'Update' : 'Add' }}
+        </button>
+        <button *ngIf="selectedService" class="btn btn-secondary ml-2" (click)="resetForm()">Cancel</button>
+      </div>
+    </div>
+  
+    
+    <div class="card p-3">
+      <h4 class="mb-3">Services List</h4>
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Service Name</th>
+            <th>Price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let service of services">
+            <td>{{ service.id }}</td>
+            <td><img [src]="service.image" alt="Service Image" width="50"></td>
+            <td>{{ service.name }}</td>
+            <td>{{ service.price }} VND</td>
+            <td>
+              <button class="btn btn-info btn-sm" (click)="editService(service)">
+                <i class="fas fa-edit"></i> Update
+              </button>
+              <button class="btn btn-danger btn-sm ml-2" (click)="deleteService(service.id)">
+                <i class="fas fa-trash-alt"></i> Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

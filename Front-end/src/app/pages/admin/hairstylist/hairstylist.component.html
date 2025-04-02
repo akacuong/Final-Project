@@ -1,0 +1,68 @@
+<div class="container-fluid mt-4">
+  
+
+  <!-- Choose Shop From Drop Down -->
+  <div class="card p-3 mb-4">
+    <h4 class="mb-3">Choose Shop</h4>
+    <select class="form-select" [(ngModel)]="selectedShopId" (change)="changeShop(selectedShopId)">
+      <option *ngFor="let shop of shops" [value]="shop.shopId">
+        {{ shop.locationShop }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Add stylist -->
+  <div class="card p-3 shadow-sm">
+    <h3 class="text-center mb-3">Add New Stylist</h3>
+    <div class="row g-2">
+      <div class="col-md-3">
+        <label class="form-label">Name</label>
+        <input class="form-control" [(ngModel)]="newStylist.name" placeholder=" name" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Specialty</label>
+        <input class="form-control" [(ngModel)]="newStylist.specialty" placeholder="specialty" />
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Experience </label>
+        <input class="form-control" [(ngModel)]="newStylist.experience" type="experience" placeholder="e.g., 5" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Image URL</label>
+        <input class="form-control" [(ngModel)]="newStylist.image" placeholder="image" />
+      </div>
+      <div class="col-md-1 d-flex align-items-end">
+        <button class="btn btn-success w-100" (click)="addStylist()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- List stylist -->
+  <div class="card p-3 mb-4 mt-4">
+    <h4 class="mb-3">Stylists List</h4>
+    <table class="table table-bordered text-center align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Specialty</th>
+          <th>Experience</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stylist of hairstylists">
+          <td>{{ stylist.name }}</td>
+          <td>{{ stylist.specialty }}</td>
+          <td>{{ stylist.experience }} years</td>
+          <td>
+            <img [src]="stylist.image" alt="Stylist Image" width="80" height="80" class="rounded-circle border" />
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="removeStylist(stylist.stylist_id)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

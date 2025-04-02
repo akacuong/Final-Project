@@ -1,0 +1,103 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    
+    <div class="navbar">
+        <div class="logo">
+            <img src="assets/images/logo.png" class = "img-responsive" alt="Logo"> 
+        </div>
+        <div class="nav-links">
+            <a href="nav-link" routerLink="customer/product-customer">Product</a>
+            <a href="nav-link" routerLink="customer/service-customer">Service</a>
+            <a href="#">Shop</a>
+            <a class="nav-link" routerLink="login" >Sign In</a>
+            <i class="fas fa-shopping-cart cart-icon" href="nav-link" routerLink="customer/cart"></i>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="container cart-container">
+            <h2 class="cart-title">Your Cart</h2>
+        
+            <div *ngIf="cartItems.length > 0; else emptyCart">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of cartItems">
+                            <td class="product-column">
+                                <div class="d-flex align-items-center">
+                                    <img [src]="item.product.image || 'assets/images/default-product.png'" 
+                                         class="product-img" 
+                                         alt="{{ item.product.name }}">
+                                    <div>
+                                        <strong >{{ item.product.name }}</strong>
+                                        <p class="text-muted">{{ item.product.description }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ item.product.price | currency:'VND' }}</td>
+                            <td>
+                                <div class="quantity-controls">
+                                    <button class="btn btn-danger btn-sm" (click)="decreaseQuantity(item)">
+                                        <i class="bi bi-dash-circle"></i>
+                                    </button>
+                                    <input type="text" class="form-control quantity-input mx-2 text-center" 
+                                           [(ngModel)]="item.quantity" readonly>
+                                    <button class="btn btn-success btn-sm" (click)="increaseQuantity(item)">
+                                        <i class="bi bi-plus-circle"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>{{ item.product.price * item.quantity | currency:'VND' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+        
+                <div class="total-section text-end">
+                    <h4>Total: <span class="text-primary">{{ totalCartPrice | currency:'VND' }}</span></h4>
+                </div>
+        
+                <div class="payment-section">
+                    <button class="btn pay-button w-100 mt-3" (click)="goToPayment()">
+                        PAY
+                    </button>
+                </div>
+                  
+            </div>
+        
+            <ng-template #emptyCart>
+                <p class="text-center text-muted">Your cart is empty.</p>
+            </ng-template>
+        </div>
+        
+        </div>
+    <div class="footer">
+        © 2023 Your Company. All rights reserved.
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

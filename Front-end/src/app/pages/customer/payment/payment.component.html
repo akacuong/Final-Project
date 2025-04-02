@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Web Checkout</title>
+</head>
+<body>
+    <div class="container">
+        <div class="checkout-form">
+            <div class="delivery-section">
+                <h1>Booking Web</h1>
+                
+                <h2>Delivery Information</h2>
+                <div class="form-group">
+                    <input type="text" placeholder="Full Name">
+                </div>
+                
+                <div class="form-group row">
+                    <input type="email" placeholder="Email">
+                    <input type="text" placeholder="Phone Number">
+                </div>
+                
+                <div class="delivery-option">
+                    <div class="radio-container">
+                        <input type="radio" id="delivery" name="delivery-method" checked>
+                        <label for="delivery">Delivered to your place</label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" placeholder="Address">
+                    </div>
+                    
+                    <div class="form-group row">
+                        <input type="text" placeholder="City">
+                        <input type="text" placeholder="District">
+                        <input type="text" placeholder="Home Number">
+                    </div>
+                </div>
+                
+                <div class="delivery-option">
+                    <div class="radio-container">
+                        <input type="radio" id="pickup" name="delivery-method">
+                        <label for="pickup">Pick up at the store</label>
+                    </div>
+                </div>
+                
+                <div class="payment-method">
+                    <h2>Payment Method</h2>
+                    
+                    <div class="payment-option" *ngFor="let method of ['COD', 'Bank Transfer', 'MOMO']">
+                        <div class="radio-container">
+                            <input type="radio" [id]="method" name="payment-method" [value]="method" [(ngModel)]="selectedPaymentMethod">
+                            <label [for]="method">{{ method }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-section">
+                <div class="product-item" *ngFor="let item of cartItems">
+                    <img [src]="item.product.image || 'assets/images/default-product.png'" class="product-image" alt="{{ item.product.name }}">
+                    <div class="product-details">
+                        <h3>{{ item.product.name }}</h3>
+                        <p>{{ item.product.price | currency:'VND' }}</p>
+                        <p>Quantity: {{ item.quantity }}</p>
+                    </div>
+                </div>
+            
+                <div class="total">
+                    Total: {{ totalPrice | currency:'VND' }}
+                </div>
+            
+                <button class="payment-button" (click)="confirmPayment()">Payment</button>
+            </div>
+            
+        </div>
+        <button class="back-to-home" routerLink="">Back To Home</button>
+    </div>
+</body>
+</html>

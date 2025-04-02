@@ -1,0 +1,97 @@
+<div class="navbar">
+    <div class="logo">
+        <img src="assets/images/logo.png" class="img-responsive" alt="Logo" routerLink=""> 
+    </div>
+    <div class="nav-links">
+        <a href="#">Product</a>
+        <a href="#">Service</a>
+        <a href="#">Shop</a>
+        <a class="nav-link" routerLink="/login">Sign In</a>
+        <i class="fas fa-shopping-cart cart-icon"></i>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="image-section">
+        <img src="https://img.pikbest.com/origin/10/04/79/388pIkbEsTzJx.jpg!sw800" alt="Placeholder image for the main section">
+    </div>
+    <div class="booking-container">
+        <div class="date-time-container">
+            <div class="dropdown-container">
+                <h3>Choose Shop</h3>
+                <select [(ngModel)]="selectedShopId" (change)="onShopChange()">
+                    <option [ngValue]="null" disabled selected>Chọn một shop</option>
+                    <option *ngFor="let shop of shops" [ngValue]="shop.shopId">
+                        {{ shop.locationShop }}
+                    </option>
+                </select>
+            </div>  
+            <div class="dropdown-container" *ngIf="selectedShopId && hairStylists.length > 0">
+                <h3>Choose Stylist</h3>
+                <select [(ngModel)]="selectedStylist">
+                    <option [ngValue]="null" disabled selected>Choice One stylist</option>
+                    <option *ngFor="let stylist of hairStylists" [ngValue]="stylist.stylist_id">
+                        {{ stylist.name }}
+                    </option>
+                </select>
+            </div>
+  
+            <h3>Choose Day</h3>
+            <mat-form-field class="date-input">
+                <mat-label>Choose Day</mat-label>
+                <input matInput [(ngModel)]="formattedDate" readonly>
+            </mat-form-field>
+            <mat-calendar [(selected)]="selectedDate" (selectedChange)="onDateChange($event)" class="custom-calendar"></mat-calendar>
+            
+            <div class="mb-4">
+                <h4>Choose Time</h4>
+                <div class="time-container">
+                    <button 
+                        class="time-button" 
+                        *ngFor="let time of ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00']" 
+                        [disabled]="isTimeBooked(time)" 
+                        [ngClass]="{'disabled-button': isTimeBooked(time)}"
+                        (click)="onSelectTime(time)">
+                        {{ time }}
+                    </button>
+                </div>
+            </div>
+            
+            
+            
+            <div class="confirmation-container" *ngIf="selectedDate && selectedTime">
+                <h3>Confirm Your Booking</h3>
+                <p><strong>Date:</strong> {{ formattedDate }}</p>
+                <p><strong>Time:</strong> {{ selectedTime }}</p>
+            </div>
+        </div>
+        <div class="schedule-container">
+            <h3>Dịch vụ</h3>
+            <div class="checkbox-list">
+                <div *ngFor="let service of services">
+                  <label>
+                    <input 
+                    type="checkbox" 
+                    [ngModel]="isServiceChecked(service)" 
+                    (ngModelChange)="onServiceCheckedChange(service, $event)"
+                    />
+
+
+                    {{ service.name }} - {{ service.price }} VND
+                  </label>
+                  
+                </div>
+              </div>
+              
+            
+            <div class="total-section">
+              <p><strong>Total:</strong> {{ calculateTotal() | number }} VND</p>
+              <button class="book-button" (click)="bookAppointment()">Book</button>
+            </div>
+          </div>
+    </div>
+</div>
+
+<div class="footer">
+    © 2023 Your Company. All rights reserved.
+</div>

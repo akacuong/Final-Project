@@ -1,0 +1,101 @@
+/* Căn chỉnh tổng thể */
+.container {
+    max-width: 900px;
+  }
+  
+  .card {
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2, h3, h4 {
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+  }
+  
+  .form-control, .form-select {
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  /* Nút bấm */
+  button {
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+  
+  .text-right button {
+    margin-right: 5px;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+  
+  /* Bảng danh sách */
+  .table {
+    margin-top: 20px;
+  }
+  
+  .table th {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+  }
+  
+  .table td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  /* Ảnh stylist */
+  img {
+    border-radius: 5px;
+    object-fit: cover;
+  }
+  
+  /* Dropdown chọn Shop */
+  .form-select {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Danh sách stylists */
+  .list-group-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .list-group-item img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  
+  .badge {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+  
