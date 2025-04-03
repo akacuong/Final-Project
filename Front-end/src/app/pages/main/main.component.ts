@@ -5,6 +5,7 @@ import { AgentService } from '../../services/agent.service';
 import { Agent } from '../../common/agent';
 import { Router, RouterModule } from '@angular/router';
 import { LoyaltyService } from '../../services/loyalty.service';
+import { Account } from '../../common/account';
 
 @Component({
   selector: 'app-main',
@@ -19,12 +20,11 @@ export class MainComponent implements OnInit {
   loyaltyPoints: number = 0;
   searchQuery: string = ''; 
   selectedAgent: Agent | null = null;
-  phoneNumber: string = '';
-  name: string = '';
   shopName: string = '';
   showWarning: boolean = false;  
   logoPath = 'assets/logo.jpg';
   username: string | null = '';
+  loggedInAccount: Account | null = null;
 
   constructor(
     private agentService: AgentService, 
@@ -35,8 +35,13 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.loadAgents();
     this.loyaltyPoints = this.loyaltyService.getCustomerPoints();
-    this.username = localStorage.getItem('loggedInUser');
+    this.getUserInfo(); // Hàm lấy username
+    // Lấy username và account từ localStorage
+    this.username = localStorage.getItem('loggedInUser');  // Lấy tên người dùng từ localStorage
+    this.loggedInAccount = JSON.parse(localStorage.getItem('loggedInAccount') || '{}');  // Lấy thông tin tài khoản
+    console.log('Username from localStorage:', this.username); // Kiểm tra trong console
   }
+  
 
   loadAgents(): void {
     this.agents = this.agentService.getAgents();
@@ -60,10 +65,30 @@ export class MainComponent implements OnInit {
   }
 
   scheduleAppointment() {
-    if (this.name && this.phoneNumber && this.searchQuery) {
+    if (this.searchQuery) {
       this.router.navigate(['customer/booking']);
     } else {
       this.showWarning = true;
     }
   }
+
+  navigateToCustomerInfo(): void {
+    if (this.username) {
+      this.router.navigate(['customer/customer-infor']);
+    }
+  }
+  getUserInfo(): void {
+    this.username = localStorage.getItem('loggedInUser');  
+    this.loggedInAccount = JSON.parse(localStorage.getItem('loggedInAccount') || '{}');
+  }
+  logout(): void {
+    localStorage.removeItem('loggedInUser');  
+    localStorage.removeItem('loggedInAccount');  
+    this.username = null;
+    this.loggedInAccount = null;
+    this.router.navigate(['/']).then(() => {
+      window.location.reload(); 
+    });
+  }
+  
 }

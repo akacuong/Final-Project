@@ -24,7 +24,7 @@ export class BookingService {
     localStorage.setItem('currentBooking', JSON.stringify(bookingData));
   }
 
-  getBookingData(): Booking | null {
+  getBookingData(): Booking | null {  
     const storedBooking = localStorage.getItem('currentBooking');
     return storedBooking ? JSON.parse(storedBooking) : null;
   }

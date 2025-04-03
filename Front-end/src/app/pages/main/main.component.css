@@ -342,6 +342,19 @@ body {
     border-top: 1px solid #ccc;
     margin-top: 20px;
   }
+  .logout-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .logout-btn:hover {
+    background-color: darkred;
+  }
   
   /* Responsive Design */
   @media (max-width: 992px) {

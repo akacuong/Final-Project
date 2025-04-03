@@ -17,14 +17,16 @@ import { CartComponent } from './pages/customer/cart/cart.component';
 import { ChartAnalyticsComponent } from './pages/admin/chart-analytics/chart-analytics.component';
 import { PaymentComponent } from './pages/customer/payment/payment.component';
 import { RegisterComponent } from './register/register.component';
+import { CustomerInforComponent } from './pages/customer/customer-infor/customer-infor.component';
+
 
 export const routes: Routes = [
   { path: '', component: MainComponent, },
-  
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { 
-    path: 'admin/dashboard', component: DashboardComponent, 
+    path: 'admin/dashboard', component: DashboardComponent,  
     children: [
       { path: 'products', component: ProductComponent },
       { path: 'category', component: CategoryComponent }, 
@@ -33,7 +35,7 @@ export const routes: Routes = [
       { path: 'hairstylist', component: HairStylistComponent },
       { path: 'shop', component: ShopComponent },
       { path: 'analyst', component: ChartAnalyticsComponent }
-    ]
+    ] 
   },
   { path: 'customer/booking', component: BookingComponent },
   { path: 'customer/service-customer', component: ServiceCustomerComponent },
@@ -41,6 +43,7 @@ export const routes: Routes = [
   { path: 'product-detail/:id', component: ProductDetailComponent },
   { path: 'customer/cart', component: CartComponent },
   { path: 'customer/payment', component: PaymentComponent },
+  { path: 'customer/customer-infor', component: CustomerInforComponent },
 
 
   { path: '**', redirectTo: '', pathMatch: 'full' }

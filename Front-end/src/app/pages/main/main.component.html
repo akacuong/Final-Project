@@ -1,57 +1,54 @@
+<!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-
 <body>
-    
     <div class="navbar">
         <div class="logo">
-            <img src="assets/images/logo.png" class = "img-responsive" alt="Logo"> 
+            <img src="assets/logo.jpg" class="img-responsive" alt="Logo"> 
         </div>
         <div class="nav-links">
             <a routerLink="/customer/product-customer">Product</a>
             <a routerLink="/customer/service-customer">Service</a>
             <a routerLink="/shop">Shop</a>
-            <a *ngIf="!username" routerLink="/login">Sign In</a>
-            <span *ngIf="username">Welcome, {{ username }}</span>
             <i class="fas fa-shopping-cart cart-icon" routerLink="/customer/cart"></i>
-        </div>
-        
+            
+            <ng-container *ngIf="username; else loginLink">
+                <span (click)="navigateToCustomerInfo()" style="cursor: pointer;">Welcome, {{ username }}</span>
+                <button class="logout-btn" (click)="logout()">Logout</button>
+              </ng-container>
+              
+              <ng-template #loginLink>
+                <a [routerLink]="['/login']">Login</a>
+              </ng-template>
+              
+          </div>
         <div class="loyalty-section">
             <i class="fas fa-gem"></i> Loyalty Points: {{ loyaltyPoints }}
         </div>
-        
     </div>
+    
     <div class="main-content">
-        
         <div class="image-section">
             <img src="https://ideogram.ai/assets/image/lossless/response/hNmUZ-TuSayC0_FBHNsWKA" alt="Placeholder image for the main section">
         </div>
         <div class="content-sections">
-           
             <div class="schedule-now">
                 <h2>Schedule Now</h2>
                 <form>
-                    <input type="text" [(ngModel)]="name"  name="name" placeholder="Name">
-                    <input type="text" [(ngModel)]="phoneNumber" name="phoneNumber" placeholder="Phone Number">       
-                    <div class="search-container ">
+                    <div class="search-container">
                         <input type="text" [(ngModel)]="searchQuery" name="searchQuery" (input)="searchAgent()" placeholder="Search Agent">
                         <div class="dropdown-list" *ngIf="filteredAgents.length > 0">
-                            <div class="dropdown-item" *ngFor="let agent of filteredAgents" (click)="selectAgent(agent)">                           
+                            <div class="dropdown-item" *ngFor="let agent of filteredAgents" (click)="selectAgent(agent)">
+                                {{ agent.agentName }}
                             </div>
                         </div>
                     </div>
-                    <button type="button" (click)="scheduleAppointment()">
-                        Schedule
-                      </button>                      
-                      <p *ngIf="showWarning" class="warning-text">
-                        ⚠️ Please Fill Full Information!
-                      </p>       
+                    <button type="button" (click)="scheduleAppointment()">Schedule</button> 
+                    <p *ngIf="showWarning" class="warning-text">⚠️ Please Fill Full Information!</p>       
                 </form>
-           
             </div>
-   
             <div class="top-barber">
                 <h2>Top Shop In Month</h2>
                 <div class="barber-list">
@@ -76,4 +73,6 @@
     </div>
 </body>
 </html>
+
 <router-outlet></router-outlet>
+

@@ -16,6 +16,7 @@ import { ServiceService } from '../../../services/service.service';
 import { Booking } from '../../../common/booking';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoyaltyService } from '../../../services/loyalty.service';
+import { CustomerLoyalty } from '../../../common/customerloyalty';
 
 @Component({
   selector: 'app-booking',
@@ -178,16 +179,46 @@ export class BookingComponent implements OnInit {
 
   bookAppointment(): void {
     if (!this.selectedStylist || !this.selectedDate || this.selectedServices.length === 0 || !this.selectedTime) {
-      alert("Please fill in all required information before scheduling!");
+      alert("Vui lòng điền đầy đủ thông tin trước khi đặt lịch!");
       return;
     }
-
+  
+    const storedAccount = localStorage.getItem('loggedInAccount');
+    const storedCustomer = localStorage.getItem('customerData');
+  
+    if (!storedAccount || !storedCustomer) {
+      alert("Không tìm thấy thông tin tài khoản! Vui lòng đăng nhập lại.");
+      return;
+    }
+  
+    const account = JSON.parse(storedAccount);
+    const customer = JSON.parse(storedCustomer);
+  
+    // Tính toán điểm tích lũy
+    const totalAmount = this.calculateTotal();
+    const loyaltyPoints = this.loyaltyService.calculatePoints(totalAmount);
+  
+    // Cập nhật điểm mới vào localStorage
+    this.loyaltyService.updateCustomerPoints(loyaltyPoints);
+  
+    // Lưu thông tin lịch sử chuyển điểm
+    const newCustomerLoyalty = new CustomerLoyalty(
+      new Date().getTime(),
+      customer.name,
+      loyaltyPoints,
+      new Date(),
+      customer.id,
+      account.id
+    );
+    this.loyaltyService.saveLoyaltyHistory(newCustomerLoyalty);
+  
+    // Lưu thông tin đặt lịch vào localStorage
     const bookingDate = new Date(this.selectedDate);
     const [hours, minutes] = this.selectedTime.split(':').map(num => parseInt(num, 10));
     bookingDate.setHours(hours, minutes, 0, 0);
-
+  
     const bookingDateTimeVN = bookingDate.toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
-
+  
     const newBooking: Booking = {
       booking_id: new Date().getTime(),
       shopId: this.selectedShopId!,
@@ -195,20 +226,28 @@ export class BookingComponent implements OnInit {
       datetime: bookingDateTimeVN,
       status: "Confirmed",
       payment_status: "Pending",
-      total_price: this.calculateTotal(),
+      total_price: totalAmount,
+      customer_id: customer.id, 
+      customer_phone: account.phoneNumber, 
     };
-
+  
     let bookings: Booking[] = JSON.parse(localStorage.getItem("bookings") || "[]");
     bookings.push(newBooking);
     localStorage.setItem("bookings", JSON.stringify(bookings));
-    alert("Booking successful!");
-
+  
+    alert(`Đặt lịch thành công! Bạn đã tích lũy ${loyaltyPoints} điểm!`);
+  
+    // Reset thông tin sau khi đặt lịch
     this.selectedStylist = null;
     this.selectedDate = null;
     this.selectedTime = null;
     this.selectedServices = [];
     this.formattedDate = '';
   }
+  
+  
+  
+  
 
   isServiceChecked(service: Service): boolean {
     return this.selectedServices.some(s => s.id === service.id);

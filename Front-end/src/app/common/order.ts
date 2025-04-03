@@ -2,7 +2,7 @@
 import { OrderDetail } from "./order-detail";
 
 export class Order {
-  id?: number;
+  public orderId?: number;
   customerId: number;
   status: string = "pending";  
   paymentStatus: string = "unpaid";
