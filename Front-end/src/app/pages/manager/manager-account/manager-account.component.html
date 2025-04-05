@@ -12,10 +12,7 @@
         <tr *ngFor="let agent of pendingAgents">
           <td>{{ agent.username }}</td>
           <td>{{ agent.email }}</td>
-          <td>
-            <button (click)="approveAgent(agent.accountId)">Approve</button>
-            <button (click)="rejectAgent(agent.accountId)">Reject</button>
-          </td>
+         
         </tr>
       </tbody>
     </table>

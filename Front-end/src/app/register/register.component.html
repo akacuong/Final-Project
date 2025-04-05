@@ -17,6 +17,12 @@
       <label for="phoneNumber">Phone Number</label>
       <input type="text" id="phoneNumber" formControlName="phoneNumber" placeholder="Số điện thoại">
 
+      <label for="role">Role</label>
+      <select id="role" formControlName="role">
+        <option value="CUSTOMER">Customer</option>
+        <option value="AGENT">Agent</option>
+      </select>
+
       <button type="submit" [disabled]="registerForm.invalid">Register</button>
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}

@@ -7,23 +7,23 @@ import { Account } from '../common/account';
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'http://localhost:3306/api/accounts';
+  private apiUrl = 'http://localhost:8080/api/accounts'; // Đảm bảo rằng URL API là chính xác
 
   constructor(private http: HttpClient) {}
 
-  getPendingAgents(): Observable<Account[]> {
+  getAccountList(): Observable<Account[]> {
     const headers = this.createAuthorizationHeader();
-    return this.http.get<Account[]>(`${this.apiUrl}/pending-agents`, { headers });
+    return this.http.get<Account[]>(`${this.apiUrl}/list`, { headers });
   }
 
-  approveAgent(agentId: number): Observable<void> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.post<void>(`${this.apiUrl}/approve-agent`, { agentId }, { headers });
-  }
-
-  rejectAgent(agentId: number): Observable<void> {
-    const headers = this.createAuthorizationHeader();
-    return this.http.post<void>(`${this.apiUrl}/reject-agent`, { agentId }, { headers });
+  register(username: string, password: string, email: string, phoneNumber: string, role: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, { 
+      username, 
+      password, 
+      email, 
+      phoneNumber, 
+      role
+    });
   }
 
   private createAuthorizationHeader(): HttpHeaders {

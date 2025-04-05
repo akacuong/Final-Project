@@ -18,28 +18,8 @@ export class ManagerAccountComponent implements OnInit {
   constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
-    this.loadPendingAgents();
+  
   }
 
-  loadPendingAgents(): void {
-    this.accountService.getPendingAgents().subscribe((agents: Account[]) => {
-      this.pendingAgents = agents;
-    });
-  }
 
-  approveAgent(agentId?: number): void {
-    if (agentId !== undefined) {
-      this.accountService.approveAgent(agentId).subscribe(() => {
-        this.loadPendingAgents();
-      });
-    }
-  }
-
-  rejectAgent(agentId?: number): void {
-    if (agentId !== undefined) {
-      this.accountService.rejectAgent(agentId).subscribe(() => {
-        this.loadPendingAgents();
-      });
-    }
-  }
 }

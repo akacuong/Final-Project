@@ -57,9 +57,6 @@ export const routes: Routes = [
   { path: 'customer/product-customer', component: ProductCustomerComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
   { path: 'product-detail/:id', component: ProductDetailComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
   { path: 'customer/cart', component: CartComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
-  { path: 'customer/payment', component: PaymentComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
-  { path: 'customer/customer-infor', component: CustomerInforComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
 @NgModule({
