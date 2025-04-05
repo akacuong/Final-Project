@@ -5,6 +5,7 @@ import { ShopService } from '../../../services/shop.service';
 import { Shop } from '../../../common/shop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-hairstylist',
@@ -20,10 +21,12 @@ export class HairStylistComponent implements OnInit {
   shops: Shop[] = [];  
   editingStylist: HairStylist | null = null;
   selectedShopLocation: string = '';
+  private apiUrl = 'https://your-backend-api-url/shops';
 
   constructor(
     private hairstylistService: HairStylistService,
-    private shopService: ShopService
+    private shopService: ShopService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -31,19 +34,21 @@ export class HairStylistComponent implements OnInit {
   }
 
   loadShops(): void {
-    this.shops = this.shopService.getShops();  
+    this.http.get<Shop[]>(this.apiUrl)
+      .subscribe(data => {
+        this.shops = data || [];
+        if (this.shops.length > 0) {
+          const savedShopId = Number(localStorage.getItem('selectedShopId'));
+          this.selectedShopId = savedShopId || this.shops[0].shopId;
 
-    if (this.shops.length > 0) {
-      const savedShopId = Number(localStorage.getItem('selectedShopId'));
-      this.selectedShopId = savedShopId || this.shops[0].shopId;
+          const shop = this.shops.find(s => s.shopId === this.selectedShopId);
+          this.selectedShopLocation = shop ? shop.locationShop : 'Unknown Shop';
 
-      const shop = this.shops.find(s => s.shopId === this.selectedShopId);
-      this.selectedShopLocation = shop ? shop.locationShop : 'Unknown Shop';
-
-      this.loadStylists();
-    } else {
-      console.warn("No shops found!");
-    }
+          this.loadStylists();
+        } else {
+          console.warn("No shops found!");
+        }
+      });
   }
 
   updateShopLocation(): void {
@@ -54,14 +59,13 @@ export class HairStylistComponent implements OnInit {
   loadStylists(): void {
     this.hairstylists = this.hairstylistService.getStylistsByShopId(Number(this.selectedShopId));
   }
-  
+
   changeShop(shopId: number): void {
     this.selectedShopId = Number(shopId);
     localStorage.setItem('selectedShopId', this.selectedShopId.toString());
     this.updateShopLocation();
     this.loadStylists();
   }
-  
 
   addStylist(): void {
     if (!this.newStylist.name.trim()) return;

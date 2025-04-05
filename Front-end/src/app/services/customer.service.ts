@@ -1,36 +1,51 @@
 import { Injectable } from '@angular/core';
 import { Customer } from '../common/customer';
 import { Account } from '../common/account';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
-  private storageKey = 'customerData';
+  private apiUrl = 'https://localhost:3306/api/customer';
+
+  constructor(private http: HttpClient) {}
 
   saveCustomer(customer: Customer) {
     if (!customer.id || customer.id === 0) {
       customer.id = Date.now(); 
     }
-    localStorage.setItem(this.storageKey, JSON.stringify(customer));
+    this.http.post(`${this.apiUrl}/save`, customer)
+      .subscribe(response => {
+        console.log('Customer data saved to backend');
+      });
   }
 
   getCustomer(): Customer | null {
-    const data = localStorage.getItem(this.storageKey);
-    try {
-      return data ? JSON.parse(data) : null;
-    } catch (error) {
-      console.error('Lỗi khi parse dữ liệu từ Local Storage:', error);
-      return null;
-    }
+    let customer: Customer | null = null;
+    this.http.get<Customer>(`${this.apiUrl}/get`)
+      .subscribe(data => {
+        customer = data || null;
+      });
+    return customer;
   }
+
   getCustomerData(): Customer | null {
-    const customerData = localStorage.getItem('customerData');
-    return customerData ? JSON.parse(customerData) : null;
+    let customerData: Customer | null = null;
+    this.http.get<Customer>(`${this.apiUrl}/data`)
+      .subscribe(data => {
+        customerData = data || null;
+      });
+    return customerData;
   }
+
   removeCustomer() {
-    localStorage.removeItem(this.storageKey);
+    this.http.delete(`${this.apiUrl}/remove`)
+      .subscribe(response => {
+        console.log('Customer data removed from backend');
+      });
   }
+
   initializeCustomerData(account: Account): Customer {
     // Initialize customer data with default values or based on the account
     const customer = new Customer();

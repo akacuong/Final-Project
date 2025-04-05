@@ -6,6 +6,7 @@ import { Agent } from '../../common/agent';
 import { Router, RouterModule } from '@angular/router';
 import { LoyaltyService } from '../../services/loyalty.service';
 import { Account } from '../../common/account';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-main',
@@ -25,27 +26,26 @@ export class MainComponent implements OnInit {
   logoPath = 'assets/logo.jpg';
   username: string | null = '';
   loggedInAccount: Account | null = null;
+  private apiUrl = 'https://your-backend-api-url/customers';
 
   constructor(
     private agentService: AgentService, 
     private router: Router,
-    private loyaltyService: LoyaltyService
+    private loyaltyService: LoyaltyService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
     this.loadAgents();
     this.loyaltyPoints = this.loyaltyService.getCustomerPoints();
     this.getUserInfo(); // Hàm lấy username
-    // Lấy username và account từ localStorage
-    this.username = localStorage.getItem('loggedInUser');  // Lấy tên người dùng từ localStorage
-    this.loggedInAccount = JSON.parse(localStorage.getItem('loggedInAccount') || '{}');  // Lấy thông tin tài khoản
-    console.log('Username from localStorage:', this.username); // Kiểm tra trong console
   }
-  
 
   loadAgents(): void {
-    this.agents = this.agentService.getAgents();
-    this.filteredAgents = [...this.agents];
+    this.agentService.getAgents().subscribe(data => {
+      this.agents = data;
+      this.filteredAgents = [...this.agents];
+    });
   }
 
   searchAgent(): void {
@@ -77,18 +77,23 @@ export class MainComponent implements OnInit {
       this.router.navigate(['customer/customer-infor']);
     }
   }
+
   getUserInfo(): void {
-    this.username = localStorage.getItem('loggedInUser');  
-    this.loggedInAccount = JSON.parse(localStorage.getItem('loggedInAccount') || '{}');
+    this.http.get<{ username: string, account: Account }>(`${this.apiUrl}/loggedInUser`)
+      .subscribe(data => {
+        this.username = data?.username || null;
+        this.loggedInAccount = data?.account || null;
+      });
   }
+
   logout(): void {
-    localStorage.removeItem('loggedInUser');  
-    localStorage.removeItem('loggedInAccount');  
-    this.username = null;
-    this.loggedInAccount = null;
-    this.router.navigate(['/']).then(() => {
-      window.location.reload(); 
-    });
+    this.http.post(`${this.apiUrl}/logout`, {})
+      .subscribe(() => {
+        this.username = null;
+        this.loggedInAccount = null;
+        this.router.navigate(['/']).then(() => {
+          window.location.reload();
+        });
+      });
   }
-  
 }

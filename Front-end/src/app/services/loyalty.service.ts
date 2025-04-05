@@ -1,44 +1,56 @@
 import { Injectable } from '@angular/core';
 import { CustomerLoyalty } from '../common/customerloyalty';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoyaltyService {
-
   private readonly POINT_RATE = 10000; 
-  private readonly STORAGE_KEY = 'loyaltyPoints';
-  private readonly LOYALTY_HISTORY_KEY = 'loyaltyHistory'; // Lưu lịch sử chuyển điểm
+  private readonly apiUrl = 'https://localhost:3306/api/loyalty';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   // Tính điểm dựa trên tổng số tiền
   calculatePoints(totalAmount: number): number {
     return Math.floor(totalAmount / this.POINT_RATE); // Ví dụ: mỗi 10.000 VND = 1 điểm
   }
 
-  // Lấy tổng số điểm của khách hàng từ localStorage
+  // Lấy tổng số điểm của khách hàng từ backend
   getCustomerPoints(): number {
-    const points = localStorage.getItem(this.STORAGE_KEY);
-    return points ? parseInt(points, 10) : 0;
+    let points = 0;
+    this.http.get<number>(`${this.apiUrl}/points`)
+      .subscribe(data => {
+        points = data || 0;
+      });
+    return points;
   }
 
-  // Cập nhật điểm của khách hàng trong localStorage
+  // Cập nhật điểm của khách hàng trên backend
   updateCustomerPoints(newPoints: number): void {
     let currentPoints = this.getCustomerPoints();
     let updatedPoints = currentPoints + newPoints;
-    localStorage.setItem(this.STORAGE_KEY, updatedPoints.toString());
+    this.http.post(`${this.apiUrl}/points`, { updatedPoints })
+      .subscribe(response => {
+        console.log('Customer points updated on backend');
+      });
   }
 
-  // Lưu lịch sử chuyển điểm vào localStorage
+  // Lưu lịch sử chuyển điểm vào backend
   saveLoyaltyHistory(customerLoyalty: CustomerLoyalty): void {
-    let loyaltyHistory: CustomerLoyalty[] = JSON.parse(localStorage.getItem(this.LOYALTY_HISTORY_KEY) || "[]");
-    loyaltyHistory.push(customerLoyalty);
-    localStorage.setItem(this.LOYALTY_HISTORY_KEY, JSON.stringify(loyaltyHistory));
+    this.http.post(`${this.apiUrl}/history`, customerLoyalty)
+      .subscribe(response => {
+        console.log('Loyalty history saved to backend');
+      });
   }
 
-  // Lấy lịch sử chuyển điểm của khách hàng từ localStorage
+  // Lấy lịch sử chuyển điểm của khách hàng từ backend
   getLoyaltyHistory(): CustomerLoyalty[] {
-    return JSON.parse(localStorage.getItem(this.LOYALTY_HISTORY_KEY) || "[]");
+    let loyaltyHistory: CustomerLoyalty[] = [];
+    this.http.get<CustomerLoyalty[]>(`${this.apiUrl}/history`)
+      .subscribe(data => {
+        loyaltyHistory = data || [];
+      });
+    return loyaltyHistory;
   }
 }

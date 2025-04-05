@@ -18,15 +18,21 @@ import { ChartAnalyticsComponent } from './pages/admin/chart-analytics/chart-ana
 import { PaymentComponent } from './pages/customer/payment/payment.component';
 import { RegisterComponent } from './register/register.component';
 import { CustomerInforComponent } from './pages/customer/customer-infor/customer-infor.component';
-
+import { HttpClientModule } from '@angular/common/http';
+import { AuthGuard } from './auth.guard';
+import { DashboardManagerComponent } from './pages/manager/dashboard-manager/dashboard-manager.component';
+import { ManagerAccountComponent } from './pages/manager/manager-account/manager-account.component';
 
 export const routes: Routes = [
-  { path: '', component: MainComponent, },
+  { path: '', component: MainComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { 
-    path: 'admin/dashboard', component: DashboardComponent,  
+    path: 'admin/dashboard', 
+    component: DashboardComponent,  
+    canActivate: [AuthGuard], 
+    data: { roles: ['ADMIN'] },
     children: [
       { path: 'products', component: ProductComponent },
       { path: 'category', component: CategoryComponent }, 
@@ -35,22 +41,29 @@ export const routes: Routes = [
       { path: 'hairstylist', component: HairStylistComponent },
       { path: 'shop', component: ShopComponent },
       { path: 'analyst', component: ChartAnalyticsComponent }
-    ] 
+    ]
   },
-  { path: 'customer/booking', component: BookingComponent },
-  { path: 'customer/service-customer', component: ServiceCustomerComponent },
-  { path: 'customer/product-customer', component: ProductCustomerComponent },
-  { path: 'product-detail/:id', component: ProductDetailComponent },
-  { path: 'customer/cart', component: CartComponent },
-  { path: 'customer/payment', component: PaymentComponent },
-  { path: 'customer/customer-infor', component: CustomerInforComponent },
-
-
+  { 
+    path: 'manager/dashboard-manager', 
+    component: DashboardManagerComponent,
+    canActivate: [AuthGuard], 
+    data: { roles: ['ADMIN'] },
+    children: [
+      { path: 'manager-account', component: ManagerAccountComponent }
+    ]
+  },
+  { path: 'customer/booking', component: BookingComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
+  { path: 'customer/service-customer', component: ServiceCustomerComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
+  { path: 'customer/product-customer', component: ProductCustomerComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
+  { path: 'product-detail/:id', component: ProductDetailComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
+  { path: 'customer/cart', component: CartComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
+  { path: 'customer/payment', component: PaymentComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
+  { path: 'customer/customer-infor', component: CustomerInforComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)], 
+  imports: [RouterModule.forRoot(routes), HttpClientModule], 
   exports: [RouterModule] 
 })
-export class RoutesModule { }
+export class AppRoutingModule { }

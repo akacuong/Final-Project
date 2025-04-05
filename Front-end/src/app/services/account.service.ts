@@ -1,25 +1,36 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Account } from '../common/account';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private storageKey = 'loggedInAccount';
+  private apiUrl = 'http://localhost:3306/api/accounts';
 
-  // Get logged-in account from localStorage
-  getLoggedInAccount(): Account | null {
-    const accountData = localStorage.getItem(this.storageKey);
-    return accountData ? JSON.parse(accountData) : null;
+  constructor(private http: HttpClient) {}
+
+  getPendingAgents(): Observable<Account[]> {
+    const headers = this.createAuthorizationHeader();
+    return this.http.get<Account[]>(`${this.apiUrl}/pending-agents`, { headers });
   }
 
-  // Set account information in localStorage
-  setLoggedInAccount(account: Account): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(account));
+  approveAgent(agentId: number): Observable<void> {
+    const headers = this.createAuthorizationHeader();
+    return this.http.post<void>(`${this.apiUrl}/approve-agent`, { agentId }, { headers });
   }
 
-  // Remove account from localStorage
-  removeLoggedInAccount(): void {
-    localStorage.removeItem(this.storageKey);
+  rejectAgent(agentId: number): Observable<void> {
+    const headers = this.createAuthorizationHeader();
+    return this.http.post<void>(`${this.apiUrl}/reject-agent`, { agentId }, { headers });
+  }
+
+  private createAuthorizationHeader(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
   }
 }

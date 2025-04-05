@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AccountService } from '../services/account.service'; 
-import { LoyaltyService } from '../services/loyalty.service'; 
-import { CustomerService } from '../services/customer.service'; 
+import { AuthService } from '../services/auth.service'; 
 
 @Component({
   selector: 'app-login',
@@ -18,53 +16,36 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private accountService: AccountService, 
-    private loyaltyService: LoyaltyService, 
-    private customerService: CustomerService 
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],  
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const email = this.loginForm.value.email.trim();
+      const username = this.loginForm.value.username.trim();
       const password = this.loginForm.value.password.trim();
-
-      const account = this.accountService.getLoggedInAccount(); 
-
-      if (account && account.email && account.password) {
-        const storedEmail = account.email.trim();
-        const storedPassword = account.password.trim();
-        
-        if (email === storedEmail && password === storedPassword) {
-          alert('Đăng nhập thành công!');
-          localStorage.setItem('loggedInUser', storedEmail);  
-          localStorage.setItem('loggedInAccount', JSON.stringify(account));
-
-          
-          let points = this.loyaltyService.getCustomerPoints();
-          if (points === 0) {
-            this.loyaltyService.updateCustomerPoints(0); 
+  
+      this.authService.login(username, password).subscribe(
+        (token: string) => {
+          this.authService.saveToken(token);
+          const roles = this.authService.getRoles();
+          if (roles.includes('ADMIN')) {
+            this.router.navigate(['/manager/dashboard-manager']);
+          } else {
+            alert('Access Denied');
           }
-
-          
-          let customerData = this.customerService.getCustomerData();
-          if (!customerData) {
-          
-            const newCustomerData = this.customerService.initializeCustomerData(account);
-            localStorage.setItem('customerData', JSON.stringify(newCustomerData));
-          }
-
-          this.router.navigate(['']);
-        } else {
-          alert('Email hoặc mật khẩu không chính xác');
+        },
+        (error) => {
+          console.error(error); // Debug lỗi rõ hơn
+          alert('Đăng nhập thất bại: ' + (error.error || 'Không xác định'));
         }
-      } else {
-        alert('Thông tin tài khoản không hợp lệ');
-      }
+      );
     }
   }
+  
+  
 }

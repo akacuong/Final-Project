@@ -25,26 +25,24 @@ export class ShopComponent implements OnInit {
   }
 
   loadAgentsAndShops(): void {
-    this.agents = this.agentService.getAgents();
-    this.agents.forEach(agent => {
-      this.shopsByAgent[agent.id] = this.shopService.getShopsByAgent(agent.id);
+    this.agentService.getAgents().subscribe(agents => {
+      this.agents = agents;
+      this.agents.forEach(agent => {
+        this.shopsByAgent[agent.id] = this.shopService.getShopsByAgent(agent.id);
+      });
     });
   }
 
   saveShop(agent: Agent): void {
     if (!this.newShop.locationShop.trim() || !this.newShop.phoneNumber.trim()) return;
     this.newShop.agent = agent;
-    this.newShop.shopId = Number(this.newShop.shopId); 
     this.shopService.addShop(this.newShop);
     this.newShop = new Shop(0, null, '', '');
     this.loadAgentsAndShops();
   }
-  
 
   deleteShop(shopId: number): void {
     this.shopService.deleteShop(shopId);
     this.loadAgentsAndShops();
   }
-
-
 }

@@ -21,26 +21,33 @@ export class AgentComponent implements OnInit {
   ngOnInit(): void {
     this.loadAgents();
   }
-  getAgents(): Agent[] {
-    return this.agents;
+
+  getAgents(): void {
+    this.agentService.getAgents().subscribe((data) => {
+      this.agents = data;
+    });
   }
 
   loadAgents(): void {
-    this.agents = this.agentService.getAgents();
+    this.getAgents();
   }
 
   saveAgent(): void {
     if (!this.newAgent.agentName.trim()) return;
 
     if (this.selectedAgent) {
-      this.agentService.updateAgent(this.newAgent);
+      this.agentService.updateAgent(this.newAgent).subscribe(() => {
+        this.loadAgents();
+      });
     } else {
-      this.agentService.addAgent(this.newAgent);
+      this.agentService.addAgent(this.newAgent).subscribe(() => {
+        this.loadAgents();
+      });
     }
 
     this.resetForm();
-    this.loadAgents();
-  }
+}
+
 
   editAgent(agent: Agent): void {
     this.selectedAgent = { ...agent };
@@ -48,8 +55,9 @@ export class AgentComponent implements OnInit {
   }
 
   deleteAgent(id: number): void {
-    this.agentService.deleteAgent(id);
-    this.loadAgents();
+    this.agentService.deleteAgent(id).subscribe(() => {
+      this.loadAgents();
+    });
   }
 
   resetForm(): void {

@@ -1,58 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Agent } from '../common/agent';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgentService {
-  private storageKey = 'agents';
+  private apiUrl = 'http://localhost:8080/api/agents';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  getAgents(): Agent[] {
-    const data = localStorage.getItem(this.storageKey);
-    return data ? JSON.parse(data).map((a: any) => new Agent(
-      a.id,
-      a.specialization,
-      a.location,
-      a.establishment,
-      a.openingHours,
-      a.professionalSkills,
-      a.ownerName,
-      a.email,
-  
-      a.agentName,
-      a.shopId, 
-    )) : [];
+  getAgents(): Observable<Agent[]> {
+    return this.http.get<Agent[]>(this.apiUrl);
   }
 
-  addAgent(agent: Agent): void {
-    const agents = this.getAgents();
-    const newId = agents.length ? Math.max(...agents.map(a => a.id)) + 1 : 1;
-
-    const newAgent = new Agent(
-      newId,
-      agent.specialization,
-      agent.location,
-      agent.establishment,
-      agent.openingHours,
-      agent.professionalSkills,
-      agent.ownerName,
-      agent.email, 
-      agent.agentName,
-      agent.shopId,
-    );
-    agents.push(newAgent);
-    localStorage.setItem(this.storageKey, JSON.stringify(agents));
+  addAgent(agent: Agent): Observable<Agent> {
+    return this.http.post<Agent>(this.apiUrl, agent);
   }
 
-  updateAgent(updatedAgent: Agent): void {
-    const agents = this.getAgents().map(a => (a.id === updatedAgent.id ? updatedAgent : a));
-    localStorage.setItem(this.storageKey, JSON.stringify(agents));
+  updateAgent(agent: Agent): Observable<Agent> {
+    return this.http.put<Agent>(`${this.apiUrl}/${agent.id}`, agent);
   }
 
-  deleteAgent(id: number): void {
-    const agents = this.getAgents().filter(a => a.id !== id);
-    localStorage.setItem(this.storageKey, JSON.stringify(agents));
+  deleteAgent(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

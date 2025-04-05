@@ -9,18 +9,13 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/auth'; 
-  private jwtHelper = new JwtHelperService();
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private jwtHelper: JwtHelperService) { } 
 
-  // auth.service.ts
   login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { 
-      username, 
-      password 
-    });
+    return this.http.post(`${this.apiUrl}/login`, { username, password }, { responseType: 'text' });
   }
-  
+
   saveToken(token: string) {
     localStorage.setItem('token', token);
   }
@@ -36,7 +31,7 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     const token = this.getToken();
-    return !!token && !this.jwtHelper.isTokenExpired(token);
+    return token && !this.jwtHelper.isTokenExpired(token);
   }
 
   getRoles(): string[] {
