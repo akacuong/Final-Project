@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
 import { Account } from '../common/account';
+import { tap } from 'rxjs/operators';  // Import tap from rxjs/operators
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'http://localhost:8080/api/accounts'; // Đảm bảo rằng URL API là chính xác
+  private apiUrl = 'http://localhost:8080/auth/register'; 
 
   constructor(private http: HttpClient) {}
 
@@ -17,13 +18,8 @@ export class AccountService {
   }
 
   register(username: string, password: string, email: string, phoneNumber: string, role: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, { 
-      username, 
-      password, 
-      email, 
-      phoneNumber, 
-      role
-    });
+    const body = { username, password, email, phoneNumber, role };
+    return this.http.post<any>(this.apiUrl, body);
   }
 
   private createAuthorizationHeader(): HttpHeaders {

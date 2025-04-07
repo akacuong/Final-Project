@@ -26,15 +26,16 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    
+    // Lấy vai trò yêu cầu từ route
     const requiredRoles = route.data['roles'];
     const decodedToken = this.jwtHelper.decodeToken(token);
-    const userRole = decodedToken?.role;
+    const userRole = decodedToken?.role; // Lấy role từ token
 
     console.log('✅ Decoded token:', decodedToken);
     console.log('🔐 User role:', userRole);
     console.log('🔒 Required roles:', requiredRoles);
 
+    // Kiểm tra xem user có quyền truy cập hay không
     if (!requiredRoles || !userRole || !requiredRoles.includes(userRole)) {
       alert('Bạn không có quyền truy cập!');
       console.log('❌ Không có quyền truy cập');

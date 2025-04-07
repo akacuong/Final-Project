@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { JwtHelperService } from './jwthelper.service';  
+import { jwtDecode }  from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,11 @@ import { Observable } from 'rxjs';
 export class AuthService {
   private apiUrl = 'http://localhost:8080/auth'; 
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient, 
+    private router: Router, 
+    private jwtHelper: JwtHelperService // Sử dụng JwtHelperService để giải mã token
+  ) { }
 
   login(username: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { 
@@ -17,7 +23,7 @@ export class AuthService {
       password 
     });
   }
-  
+
   saveToken(token: string) {
     localStorage.setItem('token', token);
   }
@@ -33,16 +39,21 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     const token = this.getToken();
-    return !!token;
+    return !!token && !this.jwtHelper.isTokenExpired(token); // Kiểm tra token có hợp lệ không
   }
-
+  decodeToken(token: string) {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  }
+  register(username: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, { username, password });
+  }
+  
   getRoles(): string[] {
-    // Giả sử token chứa thông tin roles
     const token = this.getToken();
     if (token) {
-      // Giải mã token để lấy thông tin roles
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      return decodedToken.roles || [];
+      const decodedToken = this.jwtHelper.decodeToken(token); // Sử dụng JwtHelperService để giải mã
+      return decodedToken?.role ? [decodedToken.role] : []; // Trả về role từ payload
     }
     return [];
   }

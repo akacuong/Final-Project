@@ -1,7 +1,46 @@
-<div class="dashboard-manager">
-    <h1>Dashboard Manager</h1>
-    <nav>
-      <a routerLink="manager-account">Manage Accounts</a>
+<div class="dashboard-container">
+  <!-- Mobile Toggle Button -->
+  <button class="mobile-toggle" (click)="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+  
+  <!-- Sidebar -->
+  <div class="sidebar" [ngClass]="{'show': sidebarCollapsed, 'collapsed': sidebarCollapsed}">
+    <div class="p-4 text-2xl font-bold text-white">
+      ADMIN MANAGEMENT
+    </div>
+    <nav class="flex-grow-1">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          Agent
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="manager-account" routerLinkActive="active">Agent Information</a>
+        </li>
+                      
+      </ul>
     </nav>
-    <router-outlet></router-outlet>
   </div>
+  
+  <!-- Main Content -->
+  <div class="main-content" [ngClass]="{'expanded': sidebarCollapsed}">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <button class="sidebar-toggle d-none d-md-block" (click)="toggleSidebar()">
+        <i class="fas" [ngClass]="sidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+      </button>
+      <input class="form-control ml-3 search-box" placeholder="Search..." type="text"/>
+      <div class="ml-auto d-flex align-items-center">
+        <div class="user-profile">
+          <i class="fas fa-user-circle mr-2"></i>
+          <span class="d-none d-md-inline">Admin</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Container -->
+    <main class="content-container">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

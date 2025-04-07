@@ -11,5 +11,8 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './dashboard-manager.component.css'
 })
 export class DashboardManagerComponent {
-
+  sidebarCollapsed = false;
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
 }

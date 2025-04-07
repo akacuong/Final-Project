@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AccountService } from '../services/account.service';
-
-import { Account } from '../common/account';
 import { JwtHelperService } from '../services/jwthelper.service';
 import { CommonModule } from '@angular/common';
 
@@ -21,7 +19,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private jwtHelper: JwtHelperService) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -37,18 +36,37 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.loginForm.valid) {
       const { username, password } = this.loginForm.value;
-
+  
       this.authService.login(username, password).subscribe({
         next: (response) => {
           const token = response.token;
-          const role = response.role;
+          if (typeof response === 'string' && response.startsWith('❌')) {
+            this.errorMessage = response;
+            alert(response); // Hiển thị thông báo từ backend
+            return;
+          }
+          // Lưu token vào localStorage
           this.authService.saveToken(token);
+  
+          // Giải mã token để lấy thông tin role
+          const decodedToken = this.jwtHelper.decodeToken(token);
+          const role = decodedToken?.role;
+  
+          console.log('Response from login:', response);  // Kiểm tra xem có trả về đúng role không
+          console.log('Decoded Role:', role);  // Kiểm tra giá trị của role sau khi giải mã token
+  
           console.log('Token:', this.authService.getToken());
+  
           if (role === 'ADMIN') {
-            this.router.navigate(['/manager/dashboard-manager']);
-            alert('Đăng nhập thành công!');
-          } 
-          alert('Đăng nhập thành công!');
+            this.router.navigate(['manager/dashboard-manager']);
+            alert('Đăng nhập thành công với quyền ADMIN!');
+          } else if (role === 'AGENT') {
+            this.router.navigate(['admin/dashboard']);
+            alert('Đăng nhập thành công với quyền AGENT!');
+          } else {
+            this.router.navigate(['customer/booking']);
+            alert('Đăng nhập thành công với quyền CUSTOMER!');
+          }
         },
         error: (err) => {
           this.errorMessage = 'Đăng nhập thất bại. Vui lòng thử lại!';
@@ -62,4 +80,7 @@ export class LoginComponent implements OnInit {
       alert('Vui lòng nhập đầy đủ thông tin!');
     }
   }
+  
+  
+  
 }

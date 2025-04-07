@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Account } from '../common/account';
 import { AccountService } from '../services/account.service';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import * as bcrypt from 'bcryptjs';
 import { AuthService } from '../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +12,6 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   errorMessage: string = '';
@@ -33,9 +29,9 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],  // Thêm điều khiển `confirmPassword`
+      confirmPassword: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', Validators.required],  // Thêm điều khiển `phoneNumber`
+      phoneNumber: ['', Validators.required],
       role: ['', Validators.required]
     });
   }
@@ -50,27 +46,28 @@ export class RegisterComponent implements OnInit {
       }
 
       this.accountService.register(username, password, email, phoneNumber, role).subscribe({
-        next: (response) => {
-          const token = response.token;
-          this.authService.saveToken(token);
-          console.log('Token:', this.authService.getToken());
-          if (role === 'ADMIN') {
-            this.router.navigate(['/admin']);
-          } else {
-            this.router.navigate(['/customer']);
-          }
-          alert('Đăng ký thành công!');
+        next: (response: any) => {
+            if (response.token) {
+                this.authService.saveToken(response.token);
+                const decodedToken = this.authService.decodeToken(response.token);
+                const userRole = decodedToken?.role;
+
+                if (userRole === 'CUSTOMER') {
+                    this.router.navigate(['/customer/booking']);
+                    alert('Đăng ký thành công! Đã đăng nhập với quyền CUSTOMER.');
+                }
+            } else {
+                alert('Đăng ký thành công! Vui lòng chờ ADMIN phê duyệt.');
+                this.router.navigate(['/login']);
+            }
         },
         error: (err) => {
-          this.errorMessage = 'Đăng ký thất bại. Vui lòng thử lại!';
-          console.error('Error status:', err.status);
-          console.error('Error message:', err.message);
-          console.error('Error details:', err);
-          alert('Đăng ký thất bại: ' + (err.error || 'Không xác định'));
+            this.errorMessage = 'Đăng ký thất bại. Vui lòng thử lại!';
+            alert('Đăng ký thất bại: ' + (err.error || 'Không xác định'));
         }
-      });
-    } else {
-      alert('Vui lòng nhập đầy đủ thông tin!');
-    }
-  }
+    });
+} else {
+    alert('Vui lòng nhập đầy đủ thông tin!');
+}
+}
 }

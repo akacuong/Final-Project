@@ -28,11 +28,13 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  
+  // Admin routes - only accessible by AGENT
   { 
     path: 'admin/dashboard', 
     component: DashboardComponent,  
     canActivate: [AuthGuard], 
-    data: { roles: ['ADMIN'] },
+    data: { roles: ['AGENT'] },  // Only AGENT can access
     children: [
       { path: 'products', component: ProductComponent },
       { path: 'category', component: CategoryComponent }, 
@@ -43,20 +45,25 @@ export const routes: Routes = [
       { path: 'analyst', component: ChartAnalyticsComponent }
     ]
   },
+  
+  // Manager routes - only accessible by ADMIN
   { 
     path: 'manager/dashboard-manager', 
     component: DashboardManagerComponent,
     canActivate: [AuthGuard], 
-    data: { roles: ['ADMIN'] },
+    data: { roles: ['ADMIN'] },  // Only ADMIN can access
     children: [
       { path: 'manager-account', component: ManagerAccountComponent }
     ]
   },
-  { path: 'customer/booking', component: BookingComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
+  
+  // Customer routes - only accessible by CUSTOMER
+  { path: 'customer/booking', component: BookingComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER', ] } },
   { path: 'customer/service-customer', component: ServiceCustomerComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
   { path: 'customer/product-customer', component: ProductCustomerComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
   { path: 'product-detail/:id', component: ProductDetailComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
   { path: 'customer/cart', component: CartComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
+  { path: 'customer/payment', component: PaymentComponent, canActivate: [AuthGuard], data: { roles: ['CUSTOMER'] } },
 ];
 
 @NgModule({
