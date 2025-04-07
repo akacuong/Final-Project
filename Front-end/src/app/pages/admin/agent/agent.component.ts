@@ -29,12 +29,20 @@ export class AgentComponent implements OnInit {
   }
 
   loadAgents(): void {
-    this.getAgents();
+    this.agentService.getAgents().subscribe(
+      (data: Agent[]) => {
+        this.agents = data;  
+        console.log('Agents loaded successfully', data);
+      },
+      error => {
+        console.error('Error loading agents', error);
+      }
+    );
   }
 
   saveAgent(): void {
     if (!this.newAgent.agentName.trim()) return;
-
+  
     if (this.selectedAgent) {
       this.agentService.updateAgent(this.newAgent).subscribe(() => {
         this.loadAgents();
@@ -44,24 +52,28 @@ export class AgentComponent implements OnInit {
         this.loadAgents();
       });
     }
-
+  
     this.resetForm();
-}
-
+  }
 
   editAgent(agent: Agent): void {
-    this.selectedAgent = { ...agent };
-    this.newAgent = { ...agent };
+    this.newAgent = { ...agent }; 
+    this.selectedAgent = { ...agent };  
   }
 
   deleteAgent(id: number): void {
     this.agentService.deleteAgent(id).subscribe(() => {
       this.loadAgents();
+      alert('Agent has been deleted successfully!');
+    }, error => {
+      console.error('There was an error!', error);
+      alert('Failed to delete the agent!');
     });
   }
 
   resetForm(): void {
     this.selectedAgent = null;
     this.newAgent = new Agent(0, '', '', '', '', '', '', '', '', 0);
+    alert('Form has been reset!');
   }
 }

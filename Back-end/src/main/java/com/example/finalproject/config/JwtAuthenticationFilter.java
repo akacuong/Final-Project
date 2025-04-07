@@ -28,27 +28,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String token = request.getHeader("Authorization");
-        // ✅ Cho phép request đi tiếp nếu không có token
+
+        // Nếu không có token hoặc token không hợp lệ (không phải Bearer)
         if (token == null || !token.startsWith("Bearer ")) {
-            chain.doFilter(request, response);
+            chain.doFilter(request, response);  // Tiếp tục chuỗi lọc nếu không có token
             return;
         }
 
-       /* if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-            if (jwtUtils.isValidToken(token)) { // ✅ Đảm bảo token hợp lệ
-                String username = jwtUtils.extractUsername(token);
-                String role = jwtUtils.extractRole(token);
+        token = token.substring(7);  // Loại bỏ "Bearer " khỏi token
 
-                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
-                UserDetails userDetails = new User(username, "", authorities);
+        if (jwtUtils.isValidToken(token)) {  // Kiểm tra tính hợp lệ của token
+            String username = jwtUtils.extractUsername(token);  // Trích xuất tên người dùng từ token
+            String role = jwtUtils.extractRole(token);  // Trích xuất vai trò từ token
 
-                SecurityContextHolder.getContext().setAuthentication(
-                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities)
-                );
-            }
-        }*/
+            // Tạo danh sách quyền (Authorities)
+            List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-        chain.doFilter(request, response);
+            // Tạo đối tượng UserDetails với username và quyền
+            UserDetails userDetails = new User(username, "", authorities);
+
+            // Lưu thông tin người dùng vào SecurityContext để có thể xác thực
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(userDetails, null, authorities)
+            );
+        }
+
+        chain.doFilter(request, response);  // Tiếp tục chuỗi lọc
     }
 }

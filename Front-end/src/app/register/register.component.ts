@@ -53,21 +53,20 @@ export class RegisterComponent implements OnInit {
                 const userRole = decodedToken?.role;
 
                 if (userRole === 'CUSTOMER') {
-                    this.router.navigate(['/customer/booking']);
-                    alert('Đăng ký thành công! Đã đăng nhập với quyền CUSTOMER.');
+                  this.router.navigate(['/customer/booking']);
+                  alert('Đăng ký thành công! Đã đăng nhập với quyền CUSTOMER.');
+                } else if (userRole === 'AGENT') {
+                  this.router.navigate(['/admin/dashboard']); // Chuyển hướng AGENT vào trang dashboard
+                  alert('Đăng ký thành công! Đã đăng nhập với quyền AGENT.');
                 }
-            } else {
-                alert('Đăng ký thành công! Vui lòng chờ ADMIN phê duyệt.');
-                this.router.navigate(['/login']);
             }
         },
         error: (err) => {
             this.errorMessage = 'Đăng ký thất bại. Vui lòng thử lại!';
+            console.error('Error during registration: ', err);
             alert('Đăng ký thất bại: ' + (err.error || 'Không xác định'));
         }
-    });
-} else {
-    alert('Vui lòng nhập đầy đủ thông tin!');
-}
-}
+      });
+    }
+  }
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { AccountService } from '../services/account.service';
 import { JwtHelperService } from '../services/jwthelper.service';
 import { CommonModule } from '@angular/common';
 
@@ -40,6 +39,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(username, password).subscribe({
         next: (response) => {
           const token = response.token;
+          console.log('Token received:', token);
           if (typeof response === 'string' && response.startsWith('❌')) {
             this.errorMessage = response;
             alert(response); // Hiển thị thông báo từ backend
@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
           } else if (role === 'AGENT') {
             this.router.navigate(['admin/dashboard']);
             alert('Đăng nhập thành công với quyền AGENT!');
-          } else {
+          } else if (role === 'CUSTOMER'){
             this.router.navigate(['customer/booking']);
             alert('Đăng nhập thành công với quyền CUSTOMER!');
           }
@@ -80,7 +80,4 @@ export class LoginComponent implements OnInit {
       alert('Vui lòng nhập đầy đủ thông tin!');
     }
   }
-  
-  
-  
 }
